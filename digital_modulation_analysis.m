@@ -21,7 +21,7 @@ bpsk_symbols = 2*bits - 1;
 %% STEP-3: AWGN Channel (y = s + n)
 
 % Choose Signal-to-Noise Ratio (SNR) in dB
-SNR_dB = 5;                 % You can try 0, 5, 10 dB
+SNR_dB = 5;                 
 
 % Convert SNR from dB to linear scale
 SNR_linear = 10^(SNR_dB/10);
@@ -91,70 +91,8 @@ grid on;
 xlabel('SNR (dB)');
 ylabel('Bit Error Rate (BER)');
 title('BER vs SNR for BPSK over AWGN Channel');
-%--------------------------------------------------
-                    %QPSK
 
 
-%Step1
-% Make sure number of bits is even
-
-bits_qpsk = bits;  
-
-if mod(length(bits),2) ~= 0
-    bits = bits(1:end-1);
-end
-
-% Group bits into pairs
-bit_pairs = reshape(bits, 2, []).';
-
-%% STEP-2: QPSK Modulation
-
-I = 1 - 2*bit_pairs(:,1);     % 0->+1 , 1->-1
-Q = 1 - 2*bit_pairs(:,2);     % 0->+1 , 1->-1
-
-% Complex QPSK symbols
-qpsk_symbols = (I + 1j*Q)/sqrt(2);
-
-
-%% STEP-3: AWGN Channel
-
-SNR_dB = 5;                         % Try 0,5,10
-SNR_linear = 10^(SNR_dB/10);
-
-% Noise variance per dimension
-noise_variance = 1/(2*SNR_linear);
-
-% Complex Gaussian noise
-noise = sqrt(noise_variance) * ...
-        (randn(size(qpsk_symbols)) + 1j*randn(size(qpsk_symbols)));
-
-% Received signal
-rx_qpsk = qpsk_symbols + noise;
-
-%% STEP-4: QPSK Demodulation
-
-rx_I = real(rx_qpsk) < 0;      % Decision on I
-rx_Q = imag(rx_qpsk) < 0;      % Decision on Q
-
-% Reconstruct received bits
-rx_bits = zeros(length(bits),1);
-rx_bits(1:2:end) = rx_I;
-rx_bits(2:2:end) = rx_Q;
-
-
-%% STEP-6: BER Calculation
-
-BER_qpsk = sum(bits ~= rx_bits) / length(bits);
-disp(['QPSK BER = ', num2str(BER_qpsk)]);
-
-
-figure;
-scatter(real(rx_qpsk), imag(rx_qpsk), '.');
-grid on;
-xlabel('In-phase');
-ylabel('Quadrature');
-title('QPSK Constellation with AWGN');
-axis equal;
 
 
 
