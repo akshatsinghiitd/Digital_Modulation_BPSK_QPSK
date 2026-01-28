@@ -49,7 +49,7 @@ rx_bits(rx_signal <= 0) = 0;
 %% STEP-5A: BER Calculation for a single SNR
 
 % Count bit errors
-num_errors = sum(bits ~= rx_bits);
+num_errors = sum(bits ~= rx_bits); %~= not equa to
 
 % Calculate BER
 BER = num_errors / length(bits);
@@ -91,6 +91,7 @@ grid on;
 xlabel('SNR (dB)');
 ylabel('Bit Error Rate (BER)');
 title('BER vs SNR for BPSK over AWGN Channel');
+
 
 
 
